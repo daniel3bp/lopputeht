@@ -1,88 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap 5 Website Example</title>
+  <title>Valokuvausportfolio</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-  .fakeimg {
-    height: 200px;
-    background: #aaa;
-  }
+    .hero {
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') center/cover no-repeat;
+      height: 300px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-shadow: 2px 2px 4px #000;
+    }
+    .gallery-img {
+      height: 200px;
+      object-fit: cover;
+    }
   </style>
 </head>
 <body>
 
-<div class="p-5 bg-primary text-white text-center">
-  <h1>My First Bootstrap 5 Page</h1>
-  <p>Resize this responsive page to see the effect!</p> 
+<div class="hero text-center">
+  <div>
+    <h1>Minun Valokuvausportfolio</h1>
+    <p>Tervetuloa tutustumaan töihini</p>
+  </div>
 </div>
 
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container-fluid">
+    <a class="navbar-brand" href="#">Etusivu</a>
     <ul class="navbar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="#">Active</a>
+        <a class="nav-link active" href="#">Galleria</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="#">Tietoa minusta</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="#">Ota yhteyttä</a>
       </li>
     </ul>
   </div>
 </nav>
 
 <div class="container mt-5">
-  <div class="row">
-    <div class="col-sm-4">
-      <h2>About Me</h2>
-      <h5>Photo of me:</h5>
-      <div class="fakeimg">Fake Image</div>
-      <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-      <h3 class="mt-4">Some Links</h3>
-      <p>Lorem ipsum dolor sit ame.</p>
-      <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-          <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-      </ul>
-      <hr class="d-sm-none">
-    </div>
-    <div class="col-sm-8">
-      <h2>TITLE HEADING</h2>
-      <h5>Title description, Dec 7, 2020</h5>
-      <div class="fakeimg">Fake Image</div>
-      <p>Some text..</p>
-      <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-
-      <h2 class="mt-5">TITLE HEADING</h2>
-      <h5>Title description, Sep 2, 2020</h5>
-      <div class="fakeimg">Fake Image</div>
-      <p>Some text..</p>
-      <p>Sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
-    </div>
+  <h2 class="mb-4">Valokuvagalleria (JSON-data haettu API:sta)</h2>
+  <div id="photo-gallery" class="row g-4">
+    <!-- JSON-kuvat tulevat tänne JavaScriptillä -->
   </div>
 </div>
 
 <div class="mt-5 p-4 bg-dark text-white text-center">
-  <p>Footer</p>
+  <p>&copy; 2025 Valokuvaajasi Nimi</p>
 </div>
+
+<script>
+  // Haetaan esimerkkikuvia JSON API:sta
+  fetch('https://jsonplaceholder.typicode.com/photos?_limit=6')
+    .then(response => response.json())
+    .then(data => {
+      const gallery = document.getElementById('photo-gallery');
+      data.forEach(photo => {
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+        col.innerHTML = `
+          <div class="card">
+            <img src="${photo.url}" class="card-img-top gallery-img" alt="${photo.title}">
+            <div class="card-body">
+              <h5 class="card-title">${photo.title.slice(0, 20)}...</h5>
+              <p class="card-text">Album ID: ${photo.albumId}</p>
+              <a href="${photo.url}" class="btn btn-primary" target="_blank">Katso kuva</a>
+            </div>
+          </div>
+        `;
+        gallery.appendChild(col);
+      });
+    })
+    .catch(error => {
+      document.getElementById('photo-gallery').innerHTML = '<p>Virhe ladattaessa kuvia.</p>';
+      console.error('Virhe:', error);
+    });
+</script>
 
 </body>
 </html>
